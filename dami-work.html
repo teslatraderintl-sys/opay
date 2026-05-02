@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fixed Savings UI</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body{
+      background:#f6f6f6;
+      display:flex;
+      justify-content:center;
+      padding:0;
+      overflow-x:hidden;
+    }
+
+    .app{
+      width:100%;
+      max-width:480px;
+      min-height:100vh;
+      background:#f7f7f7;
+      position:relative;
+      padding-bottom:120px;
+    }
+
+    .topbar{
+      height:55px;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 18px;
+      font-size:15px;
+      font-weight:600;
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+
+    .left-top{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .back{
+      font-size:24px;
+      cursor:pointer;
+    }
+
+    .card{
+      background:#fff;
+      border-radius:18px;
+      margin:10px;
+      padding:28px 20px;
+      box-shadow:0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    .center{
+      text-align:center;
+    }
+
+    .balance-title{
+      color:#222;
+      font-size:18px;
+      margin-bottom:10px;
+      font-weight:600;
+    }
+
+    .amount{
+      color:#00b96b;
+      font-size:30px;
+      font-weight:600;
+    }
+
+    .subtitle{
+      margin-top:10px;
+      color:#888;
+      font-size:13px;
+      font-weight: 400;
+    }
+
+    .powered{
+      margin:8px 22px 18px;
+      color:#1dbb73;
+      display:flex;
+      align-items:center;
+      justify-content: center;
+      gap:10px;
+      font-size:13px;
+    }
+
+    .shield{
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:#1dbb73;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size:13px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      padding:0 18px;
+    }
+
+    .grid-card{
+      background:#fff;
+      border-radius:16px;
+      padding:20px 20px;
+      text-align:center;
+      color:#222;
+      font-size:14px;
+      box-shadow:0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    .grid-icon{
+      color:#1dbb73;
+      font-size:20px;
+      margin-bottom:5px;
+    }
+
+    .offer{
+      background:#fff;
+      border:1px solid #d7efe4;
+      border-radius:18px;
+      margin:18px;
+      overflow:hidden;
+    }
+
+    .offer-top{
+      background:#eefaf4;
+      padding:16px 18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+    }
+
+    .offer-title{
+      font-size:28px;
+      font-weight:700;
+      color:#00b96b;
+      margin-top:8px;
+    }
+
+    .strike{
+      color:#999;
+      text-decoration:line-through;
+      font-size:16px;
+    }
+
+    .small-red{
+      color:#ff6868;
+      font-size:14px;
+      margin-top:5px;
+    }
+
+    .quota{
+      font-size:12px;
+      color:#777;
+      text-align:right;
+    }
+
+    .bar{
+      width:110px;
+      height:8px;
+      background:#ddd;
+      border-radius:20px;
+      margin-top:10px;
+      overflow:hidden;
+      margin-left:auto;
+    }
+
+    .bar span{
+      display:block;
+      width:40%;
+      height:100%;
+      background:#00b96b;
+      border-radius:20px;
+    }
+
+    .offer-bottom{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:18px;
+    }
+
+    .duration{
+      font-size:30px;
+      font-weight:700;
+      color:#222;
+      line-height:1;
+    }
+
+    .muted{
+      color:#666;
+      font-size:13px;
+      margin-top:4px;
+    }
+
+    .save-btn{
+      background:#00c56f;
+      color:#fff;
+      border:none;
+      padding:12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .plan-card{
+      background:#fff;
+      margin:22px 18px;
+      border-radius:20px;
+      padding:24px;
+      position:relative;
+    }
+
+    .plan-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:22px;
+    }
+
+    .pill{
+      background:#eef7ff;
+      color:#2087ff;
+      padding:10px 18px;
+      border-radius:999px;
+      font-weight:700;
+      font-size:14px;
+    }
+
+    .details{
+      background:#f8f8f8;
+      border-radius:16px;
+      padding:22px 18px;
+    }
+
+    .row{
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:26px;
+    }
+
+    .label{
+      color:#999;
+      font-size:15px;
+      margin-bottom:10px;
+    }
+
+    .value{
+      font-size:18px;
+      font-weight:600;
+      color:#222;
+    }
+
+    .line{
+      border-top:1px dashed #ddd;
+      margin-bottom:22px;
+    }
+
+    .liquid{
+      text-align:center;
+      color:#00b96b;
+      font-size:18px;
+      font-weight:700;
+      margin-top:24px;
+    }
+
+    .bottom-btn{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:0;
+      width:100%;
+      max-width:480px;
+      background:#f7f7f7;
+      padding:16px;
+    }
+
+    .create-btn{
+      width:100%;
+      border:none;
+      background:#00c56f;
+      color:#fff;
+      height:50px;
+      border-radius:12px;
+      font-size:16px;
+      font-weight:500;
+      cursor:pointer;
+    }
+
+    /* Floating CSR */
+    .floating-csr{
+      position:fixed;
+      width:82px;
+      height:82px;
+      right:16px;
+      bottom:120px;
+      border-radius:50%;
+      background:#fff;
+      box-shadow:0 10px 30px rgba(0,0,0,0.18);
+      overflow:hidden;
+      cursor:grab;
+      z-index:9999;
+      touch-action:none;
+      user-select:none;
+      transition:
+        right 0.35s ease,
+        bottom 0.35s ease,
+        transform 0.15s ease;
+    }
+
+    .floating-csr.dragging{
+      cursor:grabbing;
+      transition:none;
+      transform:scale(1.05);
+    }
+
+    .floating-csr img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .csr-label{
+      position:absolute;
+      bottom:0;
+      width:100%;
+      background:#fff;
+      text-align:center;
+      font-weight:700;
+      color:#00b96b;
+      font-size:14px;
+      padding:4px 0;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="topbar">
+    <div class="left-top">
+      <div class="back">‹</div>
+      <div>Fixed</div>
+    </div>
+
+    <div>More</div>
+  </div>
+
+  <div class="card center" style="margin-top: 10px;">
+    <div class="balance-title">Fixed</div>
+
+    <div class="amount">₦950,000.00</div>
+
+    <div class="subtitle">
+      Deposit & earn massive returns
+    </div>
+  </div>
+
+  <div class="powered">
+    <div class="shield">✓</div>
+    Powered by OPay Microfinance Bank
+  </div>
+
+  <div class="grid">
+
+    <div class="grid-card">
+      <div class="grid-icon">⇄</div>
+      Transactions
+    </div>
+
+    <div class="grid-card">
+      <div class="grid-icon">🎟</div>
+      Coupons
+    </div>
+
+  </div>
+
+  <div class="offer">
+
+    <div class="offer-top">
+
+      <div>
+        <div style="font-size:12px;font-weight:600;color:#222;">
+          Big Friday Fixed
+        </div>
+
+        <div class="small-red">
+          47m left
+        </div>
+      </div>
+
+      <div>
+        <div class="quota">
+          Quota: ₦2B | Sufficient
+        </div>
+
+        <div class="bar">
+          <span></span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="offer-bottom">
+
+      <div>
+        <div class="offer-title">
+          25%
+          <span class="strike">15%</span>
+        </div>
+
+        <div class="muted">
+          Interest p.a.
+        </div>
+      </div>
+
+      <div>
+        <div class="duration">8d</div>
+
+        <div class="muted">
+          Duration
+        </div>
+      </div>
+
+      <button class="save-btn">
+        Save Now
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="plan-card">
+
+    <div class="plan-head">
+
+      <div style="font-size:14px;color:#222;">
+        Future
+      </div>
+
+      <div class="pill">
+        Investing
+      </div>
+
+    </div>
+
+    <div class="details">
+
+      <div class="row">
+
+        <div>
+          <div class="label">Amount (₦)</div>
+          <div class="value">₦950,000.00</div>
+        </div>
+
+        <div>
+          <div class="label">Interest (₦)</div>
+          <div class="value">₦5.75</div>
+        </div>
+
+      </div>
+
+      <div class="line"></div>
+
+      <div class="row">
+
+        <div>
+          <div class="label">Maturity Date</div>
+        </div>
+
+        <div class="value" style="font-size: 14px;">
+          29 November 2026
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="liquid">
+      View Liquidated Plans >
+    </div>
+
+  </div>
+
+</div>
+
+<div class="bottom-btn">
+  <button class="create-btn">
+    Create a Plan
+  </button>
+</div>
+
+<!-- Floating CSR -->
+<div class="floating-csr" id="floatingCSR">
+
+  <img
+    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop"
+    alt="CSR"
+  />
+
+  <div class="csr-label">CSR</div>
+
+</div>
+
+<script>
+
+  const csr = document.getElementById("floatingCSR");
+
+  let isDragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  function startDrag(e){
+
+    isDragging = true;
+
+    csr.classList.add("dragging");
+
+    const rect = csr.getBoundingClientRect();
+
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    offsetX = clientX - rect.left;
+    offsetY = clientY - rect.top;
+
+    csr.style.left = rect.left + "px";
+    csr.style.top = rect.top + "px";
+    csr.style.right = "auto";
+    csr.style.bottom = "auto";
+  }
+
+  function drag(e){
+
+    if(!isDragging) return;
+
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    let x = clientX - offsetX;
+    let y = clientY - offsetY;
+
+    const maxX = window.innerWidth - csr.offsetWidth;
+    const maxY = window.innerHeight - csr.offsetHeight;
+
+    x = Math.max(0, Math.min(x, maxX));
+    y = Math.max(0, Math.min(y, maxY));
+
+    csr.style.left = x + "px";
+    csr.style.top = y + "px";
+  }
+
+  function endDrag(){
+
+    if(!isDragging) return;
+
+    isDragging = false;
+
+    csr.classList.remove("dragging");
+
+    // Gravity back to bottom-right
+    setTimeout(() => {
+
+      csr.style.left = "auto";
+      csr.style.top = "auto";
+      csr.style.right = "16px";
+      csr.style.bottom = "120px";
+
+    }, 100);
+
+  }
+
+  csr.addEventListener("mousedown", startDrag);
+  document.addEventListener("mousemove", drag);
+  document.addEventListener("mouseup", endDrag);
+
+  csr.addEventListener("touchstart", startDrag, {passive:true});
+  document.addEventListener("touchmove", drag, {passive:false});
+  document.addEventListener("touchend", endDrag);
+
+  // Functional click
+  csr.addEventListener("click", () => {
+
+    if(isDragging) return;
+
+    //alert("Hello 👋 CSR Support is online.");
+
+  });
+
+</script>
+
+</body>
+</html>
