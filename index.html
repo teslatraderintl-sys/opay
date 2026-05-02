@@ -1,608 +1,618 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fixed Savings UI</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fixed Savings UI</title>
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family: Arial, Helvetica, sans-serif;
-    }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
-    body{
-      background:#f6f6f6;
-      display:flex;
-      justify-content:center;
-      padding:0;
-      overflow-x:hidden;      
-      height:100dvh;
-    }
+        body {
+            background: #f6f6f6;
+        }
 
-    .app{
-      width:100%;
-      max-width:480px;
-      height: fit-content;
-      background:#f7f7f7;
-      position:relative;
-      padding-bottom:20px;
-    }
+        .container {
+            height: 100dvh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            background: #f6f6f6;
+        }
 
-    .topbar{
-      height:55px;
-      background:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:0 18px;
-      font-size:15px;
-      font-weight:600;
-      position:sticky;
-      top:0;
-      z-index:10;
-    }
+        .app {
+            width: 100%;
+            max-width: 480px;
+            height: 100dvh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #f7f7f7;
+            position: relative;
+            -webkit-overflow-scrolling: touch;
+        }
 
-    .left-top{
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
+        .topbar {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 55px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 18px;
+            font-size: 15px;
+            font-weight: 600;
+            z-index: 1000;
+            border-bottom: 1px solid #eee;
+        }
 
-    .back{
-      font-size:24px;
-      cursor:pointer;
-    }
+        .left-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    .card{
-      background:#fff;
-      border-radius:18px;
-      margin:10px;
-      padding:28px 20px;
-      box-shadow:0 1px 2px rgba(0,0,0,0.03);
-    }
+        .back {
+            font-size: 24px;
+            cursor: pointer;
+        }
 
-    .center{
-      text-align:center;
-    }
+        .card {
+            background: #fff;
+            border-radius: 18px;
+            margin: 10px;
+            padding: 28px 20px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
 
-    .balance-title{
-      color:#222;
-      font-size:14px;
-      margin-bottom:10px;
-      font-weight:500;
-    }
+        .center {
+            text-align: center;
+        }
 
-    .amount{
-      color:#00af66;
-      font-size:30px;
-      font-weight:600;
-    }
+        .balance-title {
+            color: #222;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
 
-    .subtitle{
-      margin-top:10px;
-      color:#888;
-      font-size:13px;
-      font-weight: 400;
-    }
+        .amount {
+            color: #00af66;
+            font-size: 30px;
+            font-weight: 600;
+        }
 
-    .powered{
-      margin:8px 22px 18px;
-      color:#1dbb73;
-      display:flex;
-      align-items:center;
-      justify-content: center;
-      gap:10px;
-      font-size:13px;
-    }
+        .subtitle {
+            margin-top: 10px;
+            color: #888;
+            font-size: 13px;
+            font-weight: 400;
+        }
 
-    .shield{
-      width:18px;
-      height:18px;
-      border-radius:50%;
-      background:#1dbb73;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#fff;
-      font-size:13px;
-    }
+        .powered {
+            margin: 8px 22px 18px;
+            color: #1dbb73;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 13px;
+        }
 
-    .grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:18px;
-      padding:0 18px;
-    }
+        .shield {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #1dbb73;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 13px;
+        }
 
-    .grid-card{
-      background:#fff;
-      border-radius:16px;
-      padding:10px;
-      text-align:center;
-      color:#222;
-      font-size:12px;
-      box-shadow:0 1px 2px rgba(0,0,0,0.03);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            padding: 0 18px;
+        }
 
-    .grid-icon{
-      color:#1dbb73;
-      height: 20px;
-      width: 20px;
-      margin-bottom:5px;
-    }
+        .grid-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 10px;
+            text-align: center;
+            color: #222;
+            font-size: 12px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .offer{
-      background:#fff;
-      border:1px solid #d7efe4;
-      border-radius:18px;
-      margin:18px;
-      overflow:hidden;
-    }
+        .grid-icon {
+            color: #1dbb73;
+            height: 20px;
+            width: 20px;
+            margin-bottom: 5px;
+        }
 
-    .offer-top{
-      background:#eefaf4;
-      padding:13px 18px;
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-    }
+        .offer {
+            background: #fff;
+            border: 1px solid #d7efe4;
+            border-radius: 18px;
+            margin: 18px;
+            overflow: hidden;
+        }
 
-    .offer-title{
-      font-size:20px;
-      font-weight:700;
-      color:#00af66;
-    }
+        .offer-top {
+            background: #eefaf4;
+            padding: 13px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
 
-    .strike{
-      color:#999;
-      text-decoration:line-through;
-      font-size:16px;
-    }
+        .offer-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #00af66;
+        }
 
-    .small-red{
-      color:#ff6868;
-      font-size:12px;
-      margin-top:5px;
-    }
+        .strike {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 16px;
+        }
 
-    .quota{
-      font-size:12px;
-      color:#777;
-      text-align:right;
-    }
+        .small-red {
+            color: #ff6868;
+            font-size: 12px;
+            margin-top: 5px;
+        }
 
-    .bar{
-      width:110px;
-      height:8px;
-      background:#ffffff;
-      border-radius:20px;
-      margin-top:10px;
-      overflow:hidden;
-      margin-left:auto;
-    }
+        .quota {
+            font-size: 12px;
+            color: #777;
+            text-align: right;
+        }
 
-    .bar span{
-      display:block;
-      width:40%;
-      height:100%;
-      background:#00af66;
-      border-radius:20px;
-    }
+        .bar {
+            width: 110px;
+            height: 8px;
+            background: #ffffff;
+            border-radius: 20px;
+            margin-top: 10px;
+            overflow: hidden;
+            margin-left: auto;
+        }
 
-    .offer-bottom{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:13px 18px;
-    }
+        .bar span {
+            display: block;
+            width: 40%;
+            height: 100%;
+            background: #00af66;
+            border-radius: 20px;
+        }
 
-    .duration{
-      font-size:20px;
-      font-weight:700;
-      color:#222;
-      line-height:1;  
-    }
+        .offer-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 13px 18px;
+        }
 
-    .muted{
-      color:#666;
-      font-size:13px;
-      margin-top:4px;
-    }
+        .duration {
+            font-size: 20px;
+            font-weight: 700;
+            color: #222;
+            line-height: 1;
+        }
 
-    .save-btn{
-      background:#00af66;
-      color:#fff;
-      border:none;
-      padding:12px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:700;
-      cursor:pointer;
-    }
+        .muted {
+            color: #666;
+            font-size: 13px;
+            margin-top: 4px;
+        }
 
-    .plan-card{
-      background:#fff;
-      margin:22px 18px;
-      border-radius:20px;
-      padding: 15px;
-      position:relative;
-    }
+        .save-btn {
+            background: #00af66;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
 
-    .plan-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:10px;
-    }
+        .plan-card {
+            background: #fff;
+            margin: 22px 18px;
+            border-radius: 20px;
+            padding: 15px;
+            position: relative;
+        }
 
-    .pill{
-      background:#eef7ff;
-      color:#2087ff;
-      padding:8px 18px;
-      border-radius:999px;
-      font-weight:600;
-      font-size:12px;
-    }
+        .plan-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
 
-    .details{
-      background:#f8f8f8;
-      border-radius:16px;
-      padding:15px 18px;
-    }
+        .pill {
+            background: #eef7ff;
+            color: #2087ff;
+            padding: 8px 18px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 12px;
+        }
 
-    .row{
-      display:flex;
-      justify-content:space-between;
-      margin-bottom:10px;
-    }
+        .details {
+            background: #f8f8f8;
+            border-radius: 16px;
+            padding: 15px 18px;
+        }
 
-    .label{
-      color:#999;
-      font-size:12px;
-      margin-bottom:10px;
-    }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
 
-    .value{
-      font-size:14px;
-      font-weight:600;
-      color:#222;
-    }
+        .label {
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
 
-    .line{
-      border-top:1px dashed #ddd;
-      margin-bottom:22px;
-    }
+        .value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #222;
+        }
 
-    .liquid{
-      text-align:center;
-      color:#00af66;
-      font-size:14px;
-      font-weight:600;
-      margin-top:24px;
-    }
+        .line {
+            border-top: 1px dashed #ddd;
+            margin-bottom: 22px;
+        }
 
-    .bottom-btn{
-      width:100%;
-      background:#f7f7f7;
-      padding:16px;
-    }
+        .liquid {
+            text-align: center;
+            color: #00af66;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 24px;
+        }
 
-    .create-btn{
-      width:100%;
-      border:none;
-      background:#00af66;
-      color:#fff;
-      height:50px;
-      border-radius:12px;
-      font-size:16px;
-      font-weight:500;
-      cursor:pointer;
-    }
+        .bottom-btn {
+            width: 100%;
+            background: #f7f7f7;
+            padding: 16px;
+        }
 
-    /* Floating CSR */
-    .floating-csr{
-      position:fixed;
-      width:82px;
-      height:82px;
-      right:16px;
-      bottom:120px;
-      overflow:hidden;
-      cursor:grab;
-      z-index:9999;
-      touch-action:none;
-      user-select:none;
-      transition:
-        right 0.35s ease,
-        bottom 0.35s ease,
-        transform 0.15s ease;
-    }
+        .create-btn {
+            width: 100%;
+            border: none;
+            background: #00af66;
+            color: #fff;
+            height: 50px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
 
-    .floating-csr.dragging{
-      cursor:grabbing;
-      transition:none;
-      transform:scale(1.05);
-    }
+        /* Floating CSR */
+        .floating-csr {
+            position: fixed;
+            width: 82px;
+            height: 82px;
+            right: 16px;
+            bottom: 120px;
+            overflow: hidden;
+            cursor: grab;
+            z-index: 9999;
+            touch-action: none;
+            user-select: none;
+            transition:
+                right 0.35s ease,
+                bottom 0.35s ease,
+                transform 0.15s ease;
+        }
 
-    .floating-csr img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
+        .floating-csr.dragging {
+            cursor: grabbing;
+            transition: none;
+            transform: scale(1.05);
+        }
 
-    .csr-label{
-      position:absolute;
-      bottom:0;
-      width:100%;
-      background:#fff;
-      text-align:center;
-      font-weight:700;
-      color:#00af66;
-      font-size:14px;
-      padding:4px 0;
-    }
+        .floating-csr img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-  </style>
+        .csr-label {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            text-align: center;
+            font-weight: 700;
+            color: #00af66;
+            font-size: 14px;
+            padding: 4px 0;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="container">
+        <div class="app">
 
-<div class="app">
+            <div class="topbar">
+                <div class="left-top">
+                    <div class="back">‹</div>
+                    <div>Fixed</div>
+                </div>
 
-  <div class="topbar">
-    <div class="left-top">
-      <div class="back">‹</div>
-      <div>Fixed</div>
+                <div>More</div>
+            </div>
+
+            <div class="card center" style="margin-top: 10px; padding: 20px;">
+                <div class="balance-title">Fixed</div>
+
+                <div class="amount">₦950,000.00</div>
+
+                <div class="subtitle">
+                    Deposit & earn massive returns
+                </div>
+            </div>
+
+            <div class="powered">
+                <img class="grid-icon" src="secure.png" alt="">
+                Powered by OPay Microfinance Bank
+            </div>
+
+            <div class="grid">
+
+                <div class="grid-card">
+                    <img class="grid-icon" src="transaction (2).png" alt="">
+                    Transactions
+                </div>
+
+                <div class="grid-card">
+                    <img class="grid-icon" src="voucher.png" alt="">
+                    Coupons
+                </div>
+
+            </div>
+
+            <div class="offer">
+
+                <div class="offer-top">
+
+                    <div>
+                        <div style="font-size:12px;font-weight:600;color:#222;">
+                            Big Friday Fixed
+                        </div>
+
+                        <div class="small-red">
+                            47m left
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="quota">
+                            Quota: ₦2B | Sufficient
+                        </div>
+
+                        <div class="bar">
+                            <span></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="offer-bottom">
+
+                    <div>
+                        <div class="offer-title">
+                            25%
+                            <span class="strike">15%</span>
+                        </div>
+
+                        <div class="muted">
+                            Interest p.a.
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="duration">8d</div>
+
+                        <div class="muted">
+                            Duration
+                        </div>
+                    </div>
+
+                    <button class="save-btn">
+                        Save Now
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="plan-card">
+
+                <div class="plan-head">
+
+                    <div style="font-size:14px;color:#222; display: flex; align-items: center; gap: 5px;">
+                        <img style="height: 15px;width: 15px;" src="padlock.png" alt="">
+                        Future
+                    </div>
+
+                    <div class="pill">
+                        Investing
+                    </div>
+
+                </div>
+
+                <div class="details">
+
+                    <div class="row">
+
+                        <div>
+                            <div class="label">Amount (₦)</div>
+                            <div class="value">₦950,000.00</div>
+                        </div>
+
+                        <div>
+                            <div class="label">Interest (₦)</div>
+                            <div class="value">₦5.75</div>
+                        </div>
+
+                    </div>
+
+                    <div class="line"></div>
+
+                    <div class="row" style="margin-bottom: 0px; padding-bottom: 0px;">
+
+                        <div>
+                            <div class="label" style="font-size: 12px;">Maturity Date</div>
+                        </div>
+
+                        <div class="value" style="font-size: 12px;">
+                            29 November 2027
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="liquid">
+                    View Liquidated Plans >
+                </div>
+
+            </div>
+
+            <div class="bottom-btn">
+                <button class="create-btn">
+                    Create a Plan
+                </button>
+            </div>
+
+        </div>
     </div>
 
-    <div>More</div>
-  </div>
 
-  <div class="card center" style="margin-top: 10px; padding: 20px;">
-    <div class="balance-title">Fixed</div>
+    <!-- Floating CSR -->
+    <div class="floating-csr" id="floatingCSR">
 
-    <div class="amount">₦950,000.00</div>
-
-    <div class="subtitle">
-      Deposit & earn massive returns
-    </div>
-  </div>
-
-  <div class="powered">
-      <img class="grid-icon" src="secure.png" alt="">
-    Powered by OPay Microfinance Bank
-  </div>
-
-  <div class="grid">
-
-    <div class="grid-card">
-      <img class="grid-icon" src="transaction (2).png" alt="">
-      Transactions
-    </div>
-
-    <div class="grid-card">
-      <img class="grid-icon" src="voucher.png" alt="">
-      Coupons
-    </div>
-
-  </div>
-
-  <div class="offer">
-
-    <div class="offer-top">
-
-      <div>
-        <div style="font-size:12px;font-weight:600;color:#222;">
-          Big Friday Fixed
-        </div>
-
-        <div class="small-red">
-          47m left
-        </div>
-      </div>
-
-      <div>
-        <div class="quota">
-          Quota: ₦2B | Sufficient
-        </div>
-
-        <div class="bar">
-          <span></span>
-        </div>
-      </div>
+        <img src="crs-image.png" alt="CSR" />
 
     </div>
 
-    <div class="offer-bottom">
+    <script>
 
-      <div>
-        <div class="offer-title">
-          25%
-          <span class="strike">15%</span>
-        </div>
+        const csr = document.getElementById("floatingCSR");
 
-        <div class="muted">
-          Interest p.a.
-        </div>
-      </div>
+        let isDragging = false;
+        let offsetX = 0;
+        let offsetY = 0;
 
-      <div>
-        <div class="duration">8d</div>
+        function startDrag(e) {
 
-        <div class="muted">
-          Duration
-        </div>
-      </div>
+            isDragging = true;
 
-      <button class="save-btn">
-        Save Now
-      </button>
+            csr.classList.add("dragging");
 
-    </div>
+            const rect = csr.getBoundingClientRect();
 
-  </div>
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-  <div class="plan-card">
+            offsetX = clientX - rect.left;
+            offsetY = clientY - rect.top;
 
-    <div class="plan-head">
+            csr.style.left = rect.left + "px";
+            csr.style.top = rect.top + "px";
+            csr.style.right = "auto";
+            csr.style.bottom = "auto";
+        }
 
-      <div style="font-size:14px;color:#222; display: flex; align-items: center; gap: 5px;">       
-        <img style="height: 15px;width: 15px;" src="padlock.png" alt="">
-        Future
-      </div>
+        function drag(e) {
 
-      <div class="pill">
-        Investing
-      </div>
+            if (!isDragging) return;
 
-    </div>
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-    <div class="details">
+            let x = clientX - offsetX;
+            let y = clientY - offsetY;
 
-      <div class="row">
+            const maxX = window.innerWidth - csr.offsetWidth;
+            const maxY = window.innerHeight - csr.offsetHeight;
 
-        <div>
-          <div class="label">Amount (₦)</div>
-          <div class="value">₦950,000.00</div>
-        </div>
+            x = Math.max(0, Math.min(x, maxX));
+            y = Math.max(0, Math.min(y, maxY));
 
-        <div>
-          <div class="label">Interest (₦)</div>
-          <div class="value">₦5.75</div>
-        </div>
+            csr.style.left = x + "px";
+            csr.style.top = y + "px";
+        }
 
-      </div>
+        function endDrag() {
 
-      <div class="line"></div>
+            if (!isDragging) return;
 
-      <div class="row" style="margin-bottom: 0px; padding-bottom: 0px;">
+            isDragging = false;
 
-        <div>
-          <div class="label" style="font-size: 12px;">Maturity Date</div>
-        </div>
+            csr.classList.remove("dragging");
 
-        <div class="value" style="font-size: 12px;">
-          29 November 2027
-        </div>
+            // Gravity back to bottom-right
+            setTimeout(() => {
 
-      </div>
+                csr.style.left = "auto";
+                csr.style.top = "auto";
+                csr.style.right = "16px";
+                csr.style.bottom = "120px";
 
-    </div>
+            }, 100);
 
-    <div class="liquid">
-      View Liquidated Plans >
-    </div>
+        }
 
-  </div>
+        csr.addEventListener("mousedown", startDrag);
+        document.addEventListener("mousemove", drag);
+        document.addEventListener("mouseup", endDrag);
 
-<div class="bottom-btn">
-  <button class="create-btn">
-    Create a Plan
-  </button>
-</div>
+        csr.addEventListener("touchstart", startDrag, { passive: true });
+        document.addEventListener("touchmove", drag, { passive: false });
+        document.addEventListener("touchend", endDrag);
 
-</div>
+        // Functional click
+        csr.addEventListener("click", () => {
 
+            if (isDragging) return;
 
+            //alert("Hello 👋 CSR Support is online.");
 
-<!-- Floating CSR -->
-<div class="floating-csr" id="floatingCSR">
+        });
 
-  <img src="crs-image.png" alt="CSR" />
-
-</div>
-
-<script>
-
-  const csr = document.getElementById("floatingCSR");
-
-  let isDragging = false;
-  let offsetX = 0;
-  let offsetY = 0;
-
-  function startDrag(e){
-
-    isDragging = true;
-
-    csr.classList.add("dragging");
-
-    const rect = csr.getBoundingClientRect();
-
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-    offsetX = clientX - rect.left;
-    offsetY = clientY - rect.top;
-
-    csr.style.left = rect.left + "px";
-    csr.style.top = rect.top + "px";
-    csr.style.right = "auto";
-    csr.style.bottom = "auto";
-  }
-
-  function drag(e){
-
-    if(!isDragging) return;
-
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-    let x = clientX - offsetX;
-    let y = clientY - offsetY;
-
-    const maxX = window.innerWidth - csr.offsetWidth;
-    const maxY = window.innerHeight - csr.offsetHeight;
-
-    x = Math.max(0, Math.min(x, maxX));
-    y = Math.max(0, Math.min(y, maxY));
-
-    csr.style.left = x + "px";
-    csr.style.top = y + "px";
-  }
-
-  function endDrag(){
-
-    if(!isDragging) return;
-
-    isDragging = false;
-
-    csr.classList.remove("dragging");
-
-    // Gravity back to bottom-right
-    setTimeout(() => {
-
-      csr.style.left = "auto";
-      csr.style.top = "auto";
-      csr.style.right = "16px";
-      csr.style.bottom = "120px";
-
-    }, 100);
-
-  }
-
-  csr.addEventListener("mousedown", startDrag);
-  document.addEventListener("mousemove", drag);
-  document.addEventListener("mouseup", endDrag);
-
-  csr.addEventListener("touchstart", startDrag, {passive:true});
-  document.addEventListener("touchmove", drag, {passive:false});
-  document.addEventListener("touchend", endDrag);
-
-  // Functional click
-  csr.addEventListener("click", () => {
-
-    if(isDragging) return;
-
-    //alert("Hello 👋 CSR Support is online.");
-
-  });
-
-</script>
+    </script>
 
 </body>
+
 </html>
